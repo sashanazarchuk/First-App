@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  taskboard:
+    image: taskboard
+    build:
+      context: .
+      dockerfile: TaskBoard/Dockerfile
+
+  db:
+    container_name: postgresdb
+    image: postgres
