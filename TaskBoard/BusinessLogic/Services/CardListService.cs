@@ -29,7 +29,8 @@ namespace BusinessLogic.Services
             {
                 var list = new CardList
                 {
-                    Name = listDto.Name
+                    Name = listDto.Name,
+                    BoardId = listDto.BoardId
                 };
 
                 context.Lists.Add(list);
