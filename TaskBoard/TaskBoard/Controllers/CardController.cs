@@ -23,7 +23,7 @@ namespace TaskBoard.Controllers
             try
             {
                 await service.CreateCard(cardDto);
-                return StatusCode(204);
+                return StatusCode(201);
             }
             catch (Exception ex)
             {

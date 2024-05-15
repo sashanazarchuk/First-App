@@ -23,7 +23,7 @@ namespace TaskBoard.Controllers
             try
             {
                 await service.CreateList(listDto);
-                return StatusCode(204);
+                return StatusCode(201);
             }
             catch (Exception ex)
             {
