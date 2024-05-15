@@ -15,8 +15,9 @@ namespace BusinessLogic.Mapper
 
             CreateMap<CardDto, Card>();
             CreateMap<Card, CardDto>()
-            .ForMember(dest => dest.TaskStatus, opt => opt.MapFrom(src => src.List.Name));
-             
+             .ForMember(dest => dest.Board, opt => opt.MapFrom(src => src.Board.Name))
+             .ForMember(dest => dest.CardList, opt => opt.MapFrom(src => src.CardList.Name));
+
             CreateMap<CardList, CardListDto>();
             CreateMap<CardListDto, CardList>();
 
@@ -25,6 +26,11 @@ namespace BusinessLogic.Mapper
 
             CreateMap<HistoryDto, History>();
             CreateMap<History, HistoryDto>();
+
+            CreateMap<BoardDto, Board>();
+            CreateMap<Board, BoardDto>()
+                .ForMember(dest => dest.ListDtos, opt => opt.MapFrom(src => src.Lists))
+                .ForMember(dest => dest.CardDtos, opt => opt.MapFrom(src => src.Cards));
         }
     }
 }

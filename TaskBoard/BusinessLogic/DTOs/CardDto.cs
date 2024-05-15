@@ -17,7 +17,13 @@ namespace BusinessLogic.DTOs
         public DateTime Date { get; set; }
         public string DateFormat { get; set; }
         public CardPriority Priority { get; set; }
-        public int ListId { get; set; }
-        public string TaskStatus { get; set; }
+       
+        public int BoardId { get; set; }
+        public string Board { get; set; }
+
+
+        public int CardListId { get; set; }
+        public string CardList { get; set; }
+
     }
 }

@@ -68,7 +68,7 @@ namespace BusinessLogic.Services
         {
             try
             {
-                var list = await context.Lists.FirstOrDefaultAsync(w => w.Id == listId);
+                var list = await context.Lists.FirstOrDefaultAsync(w => w.CardListId == listId);
 
                 if (list == null)
                     throw new Exception($"List with id {listId} not found");

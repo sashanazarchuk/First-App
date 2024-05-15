@@ -20,6 +20,22 @@ namespace Entities.Data
 
             modelBuilder.ApplyConfiguration<Card>(new DataSeed());
             modelBuilder.ApplyConfiguration<CardList>(new DataSeed());
+            modelBuilder.ApplyConfiguration<Board>(new DataSeed());
+
+            modelBuilder.Entity<Card>()
+               .HasOne(c => c.Board)
+               .WithMany(c => c.Cards)
+               .HasForeignKey(c => c.BoardId);
+
+            modelBuilder.Entity<Card>()
+                .HasOne(c => c.CardList)
+                .WithMany(c => c.Cards)
+                .HasForeignKey(c => c.CardListId);
+
+            modelBuilder.Entity<CardList>()
+                .HasOne(c => c.Board)
+                .WithMany(c => c.Lists)
+                .HasForeignKey(c => c.BoardId);
 
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -31,5 +47,6 @@ namespace Entities.Data
         public DbSet<Card> Cards { get; set; }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<History> Histories { get; set; }
+        public DbSet<Board> Boards { get; set; }
     }
 }

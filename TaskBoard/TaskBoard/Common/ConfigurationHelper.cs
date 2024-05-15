@@ -26,6 +26,7 @@ namespace TaskBoard.Common
             services.AddScoped<ICardListService<CardListDto>, CardListService>();
             services.AddScoped<IActivityService<ActivityDto>, ActivityService>();
             services.AddScoped<IHistoryService<HistoryDto>, HistoryService>();
+            services.AddScoped<IBoardService<BoardDto>, BoardService>();
         }
 
         public static void AddCorsPolicy(this IServiceCollection services)

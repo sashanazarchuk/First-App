@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Entities.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240514233929_Initial")]
+    [Migration("20240515005247_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -30,11 +30,11 @@ namespace Entities.Migrations
 
             modelBuilder.Entity("Entities.Models.Activity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ActivityId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ActivityId"));
 
                     b.Property<string>("Action")
                         .HasColumnType("text");
@@ -45,18 +45,52 @@ namespace Entities.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("Id");
+                    b.HasKey("ActivityId");
 
                     b.ToTable("Activities");
                 });
 
-            modelBuilder.Entity("Entities.Models.Card", b =>
+            modelBuilder.Entity("Entities.Models.Board", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("BoardId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BoardId"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("BoardId");
+
+                    b.ToTable("Boards");
+
+                    b.HasData(
+                        new
+                        {
+                            BoardId = 1,
+                            Name = "Home Board"
+                        },
+                        new
+                        {
+                            BoardId = 2,
+                            Name = "Work Board"
+                        });
+                });
+
+            modelBuilder.Entity("Entities.Models.Card", b =>
+                {
+                    b.Property<int>("CardId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CardId"));
+
+                    b.Property<int>("BoardId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CardListId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
@@ -64,64 +98,68 @@ namespace Entities.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<int>("ListId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.Property<int>("Priority")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("CardId");
 
-                    b.HasIndex("ListId");
+                    b.HasIndex("BoardId");
+
+                    b.HasIndex("CardListId");
 
                     b.ToTable("Cards");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            CardId = 1,
+                            BoardId = 1,
+                            CardListId = 1,
                             Date = new DateTime(2024, 5, 9, 21, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Prepare a short project presentation for a meeting with the client.",
-                            ListId = 1,
                             Name = "Prepare presentation",
                             Priority = 1
                         },
                         new
                         {
-                            Id = 2,
+                            CardId = 2,
+                            BoardId = 1,
+                            CardListId = 1,
                             Date = new DateTime(2024, 5, 9, 21, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Organize a meeting with the supplier to discuss terms of delivery.",
-                            ListId = 1,
                             Name = "Negotiate with supplier",
                             Priority = 2
                         },
                         new
                         {
-                            Id = 3,
+                            CardId = 3,
+                            BoardId = 1,
+                            CardListId = 2,
                             Date = new DateTime(2024, 5, 9, 21, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Prepare a detailed report on the work done for the past month for management.",
-                            ListId = 2,
                             Name = "Prepare monthly report",
                             Priority = 3
                         },
                         new
                         {
-                            Id = 4,
+                            CardId = 4,
+                            BoardId = 1,
+                            CardListId = 2,
                             Date = new DateTime(2024, 5, 9, 21, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Plan and organize a corporate event for company employees.",
-                            ListId = 2,
                             Name = "Organize corporate event",
                             Priority = 1
                         },
                         new
                         {
-                            Id = 5,
+                            CardId = 5,
+                            BoardId = 1,
+                            CardListId = 1,
                             Date = new DateTime(2024, 5, 9, 21, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Develop a proposal for collaboration to present to a potential client.",
-                            ListId = 1,
                             Name = "Prepare proposal for potential client",
                             Priority = 2
                         });
@@ -129,60 +167,108 @@ namespace Entities.Migrations
 
             modelBuilder.Entity("Entities.Models.CardList", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CardListId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CardListId"));
+
+                    b.Property<int>("BoardId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("CardListId");
+
+                    b.HasIndex("BoardId");
 
                     b.ToTable("Lists");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            Name = "Planned"
+                            CardListId = 1,
+                            BoardId = 1,
+                            Name = "Home Planned"
                         },
                         new
                         {
-                            Id = 2,
-                            Name = "Completed"
+                            CardListId = 2,
+                            BoardId = 1,
+                            Name = "Home Completed"
+                        },
+                        new
+                        {
+                            CardListId = 3,
+                            BoardId = 2,
+                            Name = "Work Planned"
+                        },
+                        new
+                        {
+                            CardListId = 4,
+                            BoardId = 2,
+                            Name = "Work Completed"
                         });
                 });
 
             modelBuilder.Entity("Entities.Models.History", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("HistoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("HistoryId"));
 
                     b.Property<string>("Action")
                         .HasColumnType("text");
 
+                    b.Property<int>("BoardId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("Id");
+                    b.HasKey("HistoryId");
 
                     b.ToTable("Histories");
                 });
 
             modelBuilder.Entity("Entities.Models.Card", b =>
                 {
-                    b.HasOne("Entities.Models.CardList", "List")
+                    b.HasOne("Entities.Models.Board", "Board")
                         .WithMany("Cards")
-                        .HasForeignKey("ListId")
+                        .HasForeignKey("BoardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("List");
+                    b.HasOne("Entities.Models.CardList", "CardList")
+                        .WithMany("Cards")
+                        .HasForeignKey("CardListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Board");
+
+                    b.Navigation("CardList");
+                });
+
+            modelBuilder.Entity("Entities.Models.CardList", b =>
+                {
+                    b.HasOne("Entities.Models.Board", "Board")
+                        .WithMany("Lists")
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Board");
+                });
+
+            modelBuilder.Entity("Entities.Models.Board", b =>
+                {
+                    b.Navigation("Cards");
+
+                    b.Navigation("Lists");
                 });
 
             modelBuilder.Entity("Entities.Models.CardList", b =>
