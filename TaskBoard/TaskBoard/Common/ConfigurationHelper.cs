@@ -23,7 +23,7 @@ namespace TaskBoard.Common
         public static void RegisterServices(this IServiceCollection services)
         {
             services.AddScoped<ICardService<CardDto>, CardService>();
-            services.AddScoped<IListService<ListDto>, ListService>();
+            services.AddScoped<ICardListService<CardListDto>, CardListService>();
             services.AddScoped<IActivityService<ActivityDto>, ActivityService>();
             services.AddScoped<IHistoryService<HistoryDto>, HistoryService>();
         }

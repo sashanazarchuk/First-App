@@ -11,6 +11,6 @@ namespace Entities.Models
         public int Id { get; set; }
         public string Action { get; set; }
         public int CardId { get; set; }
-        public string Date { get; set; } 
+        public DateTime Date { get; set; } 
     }
 }

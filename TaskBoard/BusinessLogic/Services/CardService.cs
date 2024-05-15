@@ -7,6 +7,7 @@ using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,21 +50,21 @@ namespace BusinessLogic.Services
                 {
                     Action = $"You created this card'",
                     CardId = card.Id,
-                    Date = DateTime.Now.ToString("MMM d 'at' h:mm tt")
+                    Date = DateTime.UtcNow
                 });
 
                 await historyService.LogHistory(new HistoryDto
                 {
                     Action = $"You created {cardDto.Name} card",
-                    Date = DateTime.Now.ToString("MMM d 'at' h:mm tt")
+                    Date = DateTime.UtcNow
 
                 });
                 return mapper.Map<CardDto>(card);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error creating card: {ex.Message}");
-                throw;
+                throw new($"Error creating card: {ex.Message}");
+
             }
         }
 
@@ -84,20 +85,20 @@ namespace BusinessLogic.Services
                 {
                     Action = $"You deleted this card'",
                     CardId = card.Id,
-                    Date = DateTime.Now.ToString("MMM d 'at' h:mm tt")
+                    Date = DateTime.UtcNow
                 });
 
                 await historyService.LogHistory(new HistoryDto
                 {
                     Action = $"You deleted {card.Name} card'",
-                    Date = DateTime.Now.ToString("MMM d 'at' h:mm tt")
+                    Date = DateTime.UtcNow
                 });
             }
             catch (Exception ex)
             {
 
-                Console.WriteLine($"Error deleting card with id {id}: {ex.Message}");
-                throw;
+                throw new($"Error deleting card with id {id}: {ex.Message}");
+
             }
         }
 
@@ -121,7 +122,7 @@ namespace BusinessLogic.Services
                         {
                             Action = change,
                             CardId = card.Id,
-                            Date = DateTime.Now.ToString("MMM d 'at' h:mm tt")
+                            Date = DateTime.UtcNow
                         });
                     }
 
@@ -134,7 +135,7 @@ namespace BusinessLogic.Services
                             await historyService.LogHistory(new HistoryDto
                             {
                                 Action = change,
-                                Date = DateTime.Now.ToString("MMM d 'at' h:mm tt")
+                                Date = DateTime.UtcNow
                             });
                         }
                     }
@@ -151,8 +152,8 @@ namespace BusinessLogic.Services
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                Console.WriteLine($"Error editing card with id {cardId}: {ex.Message}");
-                throw;
+                throw new($"Error editing card with id {cardId}: {ex.Message}");
+
             }
         }
 
@@ -165,13 +166,16 @@ namespace BusinessLogic.Services
                 if (card == null)
                     throw new Exception($"Card with id {id} not found");
 
-                return mapper.Map<CardDto>(card);
+                var cardDto = mapper.Map<CardDto>(card);
+                cardDto.DateFormat = cardDto.Date.ToString("ddd, d MMMM");
+
+                return cardDto;
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error fetching card with id {id}: {ex.Message}");
-                throw;
+                throw new($"Error fetching card with id {id}: {ex.Message}");
+
             }
         }
 
@@ -179,14 +183,19 @@ namespace BusinessLogic.Services
         {
             try
             {
-                var card = await context.Cards.ToListAsync();
-                return mapper.Map<IEnumerable<CardDto>>(card);
+                var cards = await context.Cards.ToListAsync();
+                var cardDtos = mapper.Map<IEnumerable<CardDto>>(cards);
+
+                foreach (var cardDto in cardDtos)
+                {
+                    cardDto.DateFormat = cardDto.Date.ToString("ddd, d MMMM");
+                }
+
+                return cardDtos;
             }
             catch (Exception ex)
             {
-
-                Console.WriteLine($"Error fetching all cards: {ex.Message}");
-                throw;
+                throw new Exception($"Error fetching all cards: {ex.Message}");
             }
         }
 
@@ -196,19 +205,19 @@ namespace BusinessLogic.Services
 
             if (card.Name != cardDto.Name)
                 changes.Add($"You renamed this card from '{card.Name}' to '{cardDto.Name}'");
-            
+
 
             if (card.Description != cardDto.Description)
                 changes.Add($"You changed description from '{card.Description}' to '{cardDto.Description}'");
-            
+
 
             if (card.Priority != cardDto.Priority)
                 changes.Add($"You changed priority from '{card.Priority}' to '{cardDto.Priority}'");
-            
+
 
             if (card.Date != cardDto.Date)
                 changes.Add($"You changed date from '{card.Date}' to '{cardDto.Date}'");
-            
+
 
             if (card.ListId != cardDto.ListId)
             {
@@ -227,19 +236,19 @@ namespace BusinessLogic.Services
 
             if (card.Name != cardDto.Name)
                 changes.Add($"You renamed '{card.Name}' to '{cardDto.Name}'");
-            
+
 
             if (card.Description != cardDto.Description)
                 changes.Add($"You changed the description {card.Name} from '{card.Description}' to '{cardDto.Description}'");
-            
+
 
             if (card.Priority != cardDto.Priority)
                 changes.Add($"You changed the priority {card.Name} from '{card.Priority}' to '{cardDto.Priority}'");
-            
+
 
             if (card.Date != cardDto.Date)
                 changes.Add($"You changed the date {card.Name} from '{card.Date}' to '{cardDto.Date}'");
-            
+
 
             if (card.ListId != cardDto.ListId)
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entities.Enum;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -13,8 +14,9 @@ namespace BusinessLogic.DTOs
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Date { get; set; }
-        public string Priority { get; set; }
+        public DateTime Date { get; set; }
+        public string DateFormat { get; set; }
+        public CardPriority Priority { get; set; }
         public int ListId { get; set; }
         public string TaskStatus { get; set; }
     }

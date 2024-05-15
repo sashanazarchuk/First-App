@@ -32,12 +32,18 @@ namespace BusinessLogic.Services
                     .OrderByDescending(h => h.Date)
                     .ToListAsync();
 
-                return _mapper.Map<IEnumerable<HistoryDto>>(history);
+                var historyDtos = _mapper.Map<IEnumerable<HistoryDto>>(history);
+
+                foreach (var historyDto in historyDtos)
+                {
+                    historyDto.DateFormat = historyDto.Date.ToString("ddd, d MMMM");
+                }
+                return historyDtos;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error fetching all history: {ex.Message}");
-                throw;
+                throw new($"Error fetching all history: {ex.Message}");
+
             }
         }
 
@@ -48,7 +54,7 @@ namespace BusinessLogic.Services
                 var history = new History
                 {
                     Action = historyDto.Action,
-                    Date = DateTime.Now.ToString("MMM d 'at' h:mm tt")
+                    Date = DateTime.UtcNow
                 };
 
                 _context.Histories.Add(history);
@@ -71,8 +77,8 @@ namespace BusinessLogic.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error logging history: {ex.Message}");
-                throw;
+                throw new($"Error logging history: {ex.Message}");
+
             }
         }
     }

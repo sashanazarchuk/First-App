@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Models
 {
-    public class List
+    public class CardList
     {
         [Key]
         public int Id { get; set; }

@@ -33,7 +33,8 @@ namespace BusinessLogic.Services
                 Id = a.Id,
                 Action = a.Action,
                 CardId = a.CardId,
-                Date = a.Date
+                Date = a.Date,
+                DateFormat = a.Date.ToString("ddd, d MMMM")
             }).ToList();
         }
 
@@ -43,7 +44,7 @@ namespace BusinessLogic.Services
             {
                 Action = activityDto.Action,
                 CardId = activityDto.CardId,
-                Date = DateTime.Now.ToString("MMM d 'at' h:mm tt")
+                Date = DateTime.UtcNow
             };
 
             context.Activities.Add(activity);

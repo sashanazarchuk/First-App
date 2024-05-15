@@ -17,8 +17,8 @@ namespace BusinessLogic.Mapper
             CreateMap<Card, CardDto>()
             .ForMember(dest => dest.TaskStatus, opt => opt.MapFrom(src => src.List.Name));
              
-            CreateMap<List, ListDto>();
-            CreateMap<ListDto, List>();
+            CreateMap<CardList, CardListDto>();
+            CreateMap<CardListDto, CardList>();
 
             CreateMap<ActivityDto, Activity>();
             CreateMap<Activity, ActivityDto>();

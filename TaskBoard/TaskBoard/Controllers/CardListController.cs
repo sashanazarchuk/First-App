@@ -7,18 +7,18 @@ namespace TaskBoard.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ListController : ControllerBase
+    public class CardListController : ControllerBase
     {
 
-        private readonly IListService<ListDto> service;
+        private readonly ICardListService<CardListDto> service;
 
-        public ListController(IListService<ListDto> service)
+        public CardListController(ICardListService<CardListDto> service)
         {
             this.service = service;
         }
 
         [HttpPost("CreateList")]
-        public async Task<IActionResult> CreateList(ListDto listDto)
+        public async Task<IActionResult> CreateList(CardListDto listDto)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace TaskBoard.Controllers
         }
 
         [HttpPatch("EditList/{id}")]
-        public async Task<IActionResult> EditList(int id, ListDto listDto)
+        public async Task<IActionResult> EditList(int id, CardListDto listDto)
         {
             try
             {

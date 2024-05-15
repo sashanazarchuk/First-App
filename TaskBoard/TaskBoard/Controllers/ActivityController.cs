@@ -19,8 +19,16 @@ namespace TaskBoard.Controllers
         [HttpGet("{cardId}")]
         public async Task<IActionResult> GetActivities(int cardId)
         {
-            var activities = await activityService.GetActivities(cardId);
-            return Ok(activities);
+            try
+            {
+                var activities = await activityService.GetActivities(cardId);
+                return Ok(activities);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

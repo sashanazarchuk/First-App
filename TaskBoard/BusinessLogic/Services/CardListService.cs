@@ -12,22 +12,22 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Services
 {
-    public class ListService : IListService<ListDto>
+    public class CardListService : ICardListService<CardListDto>
     {
         private readonly AppDbContext context;
         private readonly IMapper mapper;
 
-        public ListService(AppDbContext context, IMapper mapper)
+        public CardListService(AppDbContext context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
         }
 
-        public async Task<ListDto> CreateList(ListDto listDto)
+        public async Task<CardListDto> CreateList(CardListDto listDto)
         {
             try
             {
-                var list = new List
+                var list = new CardList
                 {
                     Name = listDto.Name
                 };
@@ -35,12 +35,12 @@ namespace BusinessLogic.Services
                 context.Lists.Add(list);
                 await context.SaveChangesAsync();
 
-                return mapper.Map<ListDto>(list);
+                return mapper.Map<CardListDto>(list);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error creating list: {ex.Message}");
-                throw;
+                throw new ($"Error creating list: {ex.Message}");
+               
             }
         }
 
@@ -59,12 +59,12 @@ namespace BusinessLogic.Services
             catch (Exception ex)
             {
 
-                Console.WriteLine($"Error deleting list with id {id}: {ex.Message}");
-                throw;
+                throw new ($"Error deleting list with id {id}: {ex.Message}");
+                 
             }
         }
 
-        public async Task<ListDto> EditList(int listId, ListDto listDto)
+        public async Task<CardListDto> EditList(int listId, CardListDto listDto)
         {
             try
             {
@@ -83,23 +83,23 @@ namespace BusinessLogic.Services
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                Console.WriteLine($"Error editing list with id {listId}: {ex.Message}");
-                throw;
+                throw new ($"Error editing list with id {listId}: {ex.Message}");
+                
             }
         }
 
-        public async Task<IEnumerable<ListDto>> FetchAllList()
+        public async Task<IEnumerable<CardListDto>> FetchAllList()
         {
             try
             {
                 var list = await context.Lists.ToListAsync();
-                return mapper.Map<IEnumerable<ListDto>>(list);
+                return mapper.Map<IEnumerable<CardListDto>>(list);
             }
             catch (Exception ex)
             {
 
-                Console.WriteLine($"Error fetching all lists: {ex.Message}");
-                throw;
+                throw new ($"Error fetching all lists: {ex.Message}");
+                 
             }
         }
     }

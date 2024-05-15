@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Interfaces
 {
-    public interface IListService<T>
+    public interface ICardListService<T>
     {
         Task<T> CreateList(T t);
         Task<T> EditList(int id, T t);

@@ -19,7 +19,7 @@ namespace Entities.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration<Card>(new DataSeed());
-            modelBuilder.ApplyConfiguration<List>(new DataSeed());
+            modelBuilder.ApplyConfiguration<CardList>(new DataSeed());
 
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -27,7 +27,7 @@ namespace Entities.Data
             optionsBuilder.UseLazyLoadingProxies();
         }
 
-        public DbSet<List> Lists { get; set; }
+        public DbSet<CardList> Lists { get; set; }
         public DbSet<Card> Cards { get; set; }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<History> Histories { get; set; }

@@ -12,6 +12,7 @@ namespace BusinessLogic.DTOs
         public int Id { get; set; }
         public string Action { get; set; }
         public int CardId { get; set; }
-        public string Date { get; set; } 
+        public DateTime Date { get; set; }
+        public string DateFormat { get; set; }
     }
 }

@@ -26,8 +26,7 @@ namespace TaskBoard.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error getting history: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                throw new ($"Error getting history: {ex.Message}");
             }
         }
     }

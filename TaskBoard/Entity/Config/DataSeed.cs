@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.Enum;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Config
 {
-    public class DataSeed : IEntityTypeConfiguration<Card>, IEntityTypeConfiguration<List>
+    public class DataSeed : IEntityTypeConfiguration<Card>, IEntityTypeConfiguration<CardList>
     {
         public void Configure(EntityTypeBuilder<Card> builder)
         {
@@ -19,8 +20,8 @@ namespace Entities.Config
                     Id = 1,
                     Name = "Prepare presentation",
                     Description = "Prepare a short project presentation for a meeting with the client.",
-                    Date = new DateTime(2024, 5, 10).ToString("ddd, d MMMM"),
-                    Priority = "High",
+                    Date = new DateTime(2024, 5, 10).ToUniversalTime(),
+                    Priority = CardPriority.Low,
                     ListId = 1
                 },
                 new Card
@@ -28,8 +29,8 @@ namespace Entities.Config
                     Id = 2,
                     Name = "Negotiate with supplier",
                     Description = "Organize a meeting with the supplier to discuss terms of delivery.",
-                    Date = new DateTime(2024, 5, 10).ToString("ddd, d MMMM"),
-                    Priority = "Medium",
+                    Date = new DateTime(2024, 5, 10).ToUniversalTime(),
+                    Priority = CardPriority.Medium,
                     ListId = 1
                 },
                 new Card
@@ -37,8 +38,8 @@ namespace Entities.Config
                     Id = 3,
                     Name = "Prepare monthly report",
                     Description = "Prepare a detailed report on the work done for the past month for management.",
-                    Date = new DateTime(2024, 5, 10).ToString("ddd, d MMMM"),
-                    Priority = "Low",
+                    Date = new DateTime(2024, 5, 10).ToUniversalTime(),
+                    Priority = CardPriority.High,
                     ListId = 2
                 },
                 new Card
@@ -46,8 +47,8 @@ namespace Entities.Config
                     Id = 4,
                     Name = "Organize corporate event",
                     Description = "Plan and organize a corporate event for company employees.",
-                    Date = new DateTime(2024, 5, 10).ToString("ddd, d MMMM"),
-                    Priority = "High",
+                    Date = new DateTime(2024, 5, 10).ToUniversalTime(),
+                    Priority = CardPriority.Low,
                     ListId = 2
                 },
                 new Card
@@ -55,17 +56,17 @@ namespace Entities.Config
                     Id = 5,
                     Name = "Prepare proposal for potential client",
                     Description = "Develop a proposal for collaboration to present to a potential client.",
-                    Date = new DateTime(2024, 5, 10).ToString("ddd, d MMMM"),
-                    Priority = "Medium",
+                    Date = new DateTime(2024, 5, 10).ToUniversalTime(),
+                    Priority = CardPriority.Medium,
                     ListId = 1
                 });
         }
 
-        public void Configure(EntityTypeBuilder<List> builder)
+        public void Configure(EntityTypeBuilder<CardList> builder)
         {
             builder.HasData(
-                new List { Id = 1, Name = "Planned" },
-                new List { Id = 2, Name = "Completed" }
+                new CardList { Id = 1, Name = "Planned" },
+                new CardList { Id = 2, Name = "Completed" }
                 );
         }
     }
