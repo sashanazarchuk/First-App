@@ -192,10 +192,10 @@ namespace BusinessLogic.Services
                 if (card == null)
                     throw new Exception($"Card with id {id} not found");
 
-                var cardDto = mapper.Map<CardDto>(card);
-                cardDto.DateFormat = cardDto.Date.ToString("ddd, d MMMM");
+                return mapper.Map<CardDto>(card);
+                 
 
-                return cardDto;
+               
 
             }
             catch (Exception ex)
@@ -210,14 +210,7 @@ namespace BusinessLogic.Services
             try
             {
                 var card = await context.Cards.Include(c => c.Board).Include(c => c.CardList).ToListAsync();
-                var cardDtos = mapper.Map<IEnumerable<CardDto>>(card);
-
-                foreach (var cardDto in cardDtos)
-                {
-                    cardDto.DateFormat = cardDto.Date.ToString("ddd, d MMMM");
-                }
-
-                return cardDtos;
+                return mapper.Map<IEnumerable<CardDto>>(card);
             }
             catch (Exception ex)
             {

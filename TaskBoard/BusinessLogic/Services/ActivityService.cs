@@ -34,7 +34,7 @@ namespace BusinessLogic.Services
                 Action = a.Action,
                 CardId = a.CardId,
                 Date = a.Date,
-                DateFormat = a.Date.ToString("ddd, d MMMM")
+           
             }).ToList();
         }
 

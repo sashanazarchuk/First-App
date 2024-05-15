@@ -9,7 +9,7 @@ namespace BusinessLogic.DTOs
 {
     public class CardListDto
     {
-        public int Id { get; set; }
+        public int CardListId { get; set; }
         public string Name { get; set; }
         public int BoardId { get; set; }
         public virtual ICollection<CardDto> Cards { get; set; }
