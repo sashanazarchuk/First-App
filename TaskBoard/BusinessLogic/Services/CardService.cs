@@ -32,13 +32,22 @@ namespace BusinessLogic.Services
         {
             try
             {
+                Board board = await context.Boards.FirstOrDefaultAsync(x => x.Name == cardDto.Board);
+
+                if (board == null)
+                    throw new Exception("Board not found");
+
+
+                CardList cardList = await context.Lists.FirstOrDefaultAsync(x => x.Name == cardDto.CardList && x.BoardId == board.BoardId);
+
                 var card = new Card
                 {
                     Name = cardDto.Name,
                     Description = cardDto.Description,
                     Date = cardDto.Date,
                     Priority = cardDto.Priority,
-                    ListId = cardDto.ListId
+                    Board = board,
+                    CardList = cardList
                 };
 
                 context.Cards.Add(card);
@@ -49,7 +58,7 @@ namespace BusinessLogic.Services
                 await activityService.LogActivity(new ActivityDto
                 {
                     Action = $"You created this card'",
-                    CardId = card.Id,
+                    CardId = card.CardId,
                     Date = DateTime.UtcNow
                 });
 
@@ -84,7 +93,7 @@ namespace BusinessLogic.Services
                 await activityService.LogActivity(new ActivityDto
                 {
                     Action = $"You deleted this card'",
-                    CardId = card.Id,
+                    CardId = card.CardId,
                     Date = DateTime.UtcNow
                 });
 
@@ -106,10 +115,26 @@ namespace BusinessLogic.Services
         {
             try
             {
-                var card = await context.Cards.FirstOrDefaultAsync(w => w.Id == cardId);
+                Board board = await context.Boards.FirstOrDefaultAsync(x => x.Name == cardDto.Board);
+
+                if (board == null)
+                    throw new Exception("Board not found");
+
+
+                CardList cardList = await context.Lists.FirstOrDefaultAsync(x => x.Name == cardDto.CardList && x.BoardId == board.BoardId);
+
+                if (cardList == null)
+                    throw new Exception("CardList not found");
+
+
+                var card = await context.Cards.Include(c => c.Board).Include(c => c.CardList).FirstOrDefaultAsync(w => w.CardId == cardId);
 
                 if (card == null)
                     throw new Exception($"Card with id {cardId} not found");
+
+
+                if (card.Board.BoardId != board.BoardId)
+                    throw new Exception("Card does not belong to the specified board");
 
 
                 var activityChanges = ActivityCardChange(card, cardDto);
@@ -121,7 +146,7 @@ namespace BusinessLogic.Services
                         await activityService.LogActivity(new ActivityDto
                         {
                             Action = change,
-                            CardId = card.Id,
+                            CardId = card.CardId,
                             Date = DateTime.UtcNow
                         });
                     }
@@ -144,7 +169,8 @@ namespace BusinessLogic.Services
                     card.Description = cardDto.Description;
                     card.Date = cardDto.Date;
                     card.Priority = cardDto.Priority;
-                    card.ListId = cardDto.ListId;
+                    card.Board = board;
+                    card.CardList = cardList;
 
                     await context.SaveChangesAsync();
                 }
@@ -161,7 +187,7 @@ namespace BusinessLogic.Services
         {
             try
             {
-                var card = await context.Cards.FirstOrDefaultAsync(c => c.Id == id);
+                var card = await context.Cards.Include(c => c.Board).Include(c => c.CardList).FirstOrDefaultAsync(c => c.CardId == id);
 
                 if (card == null)
                     throw new Exception($"Card with id {id} not found");
@@ -183,8 +209,8 @@ namespace BusinessLogic.Services
         {
             try
             {
-                var cards = await context.Cards.ToListAsync();
-                var cardDtos = mapper.Map<IEnumerable<CardDto>>(cards);
+                var card = await context.Cards.Include(c => c.Board).Include(c => c.CardList).ToListAsync();
+                var cardDtos = mapper.Map<IEnumerable<CardDto>>(card);
 
                 foreach (var cardDto in cardDtos)
                 {
@@ -219,10 +245,10 @@ namespace BusinessLogic.Services
                 changes.Add($"You changed date from '{card.Date}' to '{cardDto.Date}'");
 
 
-            if (card.ListId != cardDto.ListId)
+            if (card.BoardId != cardDto.BoardId)
             {
-                var oldListName = context.Lists.Where(l => l.Id == card.ListId).Select(l => l.Name).FirstOrDefault();
-                var newListName = context.Lists.Where(l => l.Id == cardDto.ListId).Select(l => l.Name).FirstOrDefault();
+                var oldListName = context.Lists.Where(l => l.CardListId == card.BoardId).Select(l => l.Name).FirstOrDefault();
+                var newListName = context.Lists.Where(l => l.CardListId == cardDto.BoardId).Select(l => l.Name).FirstOrDefault();
 
                 changes.Add($"You changed status from '{oldListName}' to '{newListName}'");
             }
@@ -250,10 +276,10 @@ namespace BusinessLogic.Services
                 changes.Add($"You changed the date {card.Name} from '{card.Date}' to '{cardDto.Date}'");
 
 
-            if (card.ListId != cardDto.ListId)
+            if (card.BoardId != cardDto.BoardId)
             {
-                var oldListName = context.Lists.Where(l => l.Id == card.ListId).Select(l => l.Name).FirstOrDefault();
-                var newListName = context.Lists.Where(l => l.Id == cardDto.ListId).Select(l => l.Name).FirstOrDefault();
+                var oldListName = context.Lists.Where(l => l.CardListId == card.BoardId).Select(l => l.Name).FirstOrDefault();
+                var newListName = context.Lists.Where(l => l.CardListId == cardDto.BoardId).Select(l => l.Name).FirstOrDefault();
 
                 changes.Add($"You moved {card.Name} from '{oldListName}' to '{newListName}'");
             }

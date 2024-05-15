@@ -9,7 +9,7 @@ namespace BusinessLogic.Interfaces
 {
     public interface IHistoryService<T>
     {
-        Task<IEnumerable<T>> GetAllHistory();
+        Task<IEnumerable<HistoryDto>> GetHistories(int boardId);
         Task LogHistory(T t);
     }
 }

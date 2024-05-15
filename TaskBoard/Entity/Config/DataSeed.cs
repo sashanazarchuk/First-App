@@ -10,63 +10,79 @@ using System.Threading.Tasks;
 
 namespace Entities.Config
 {
-    public class DataSeed : IEntityTypeConfiguration<Card>, IEntityTypeConfiguration<CardList>
+    public class DataSeed : IEntityTypeConfiguration<Card>, IEntityTypeConfiguration<CardList>, IEntityTypeConfiguration<Board>
     {
         public void Configure(EntityTypeBuilder<Card> builder)
         {
             builder.HasData(
                 new Card
                 {
-                    Id = 1,
+                    CardId = 1,
                     Name = "Prepare presentation",
                     Description = "Prepare a short project presentation for a meeting with the client.",
                     Date = new DateTime(2024, 5, 10).ToUniversalTime(),
                     Priority = CardPriority.Low,
-                    ListId = 1
+                    BoardId = 1,
+                    CardListId = 1
                 },
                 new Card
                 {
-                    Id = 2,
+                    CardId = 2,
                     Name = "Negotiate with supplier",
                     Description = "Organize a meeting with the supplier to discuss terms of delivery.",
                     Date = new DateTime(2024, 5, 10).ToUniversalTime(),
                     Priority = CardPriority.Medium,
-                    ListId = 1
+                    BoardId = 1,
+                    CardListId = 1
                 },
                 new Card
                 {
-                    Id = 3,
+                    CardId = 3,
                     Name = "Prepare monthly report",
                     Description = "Prepare a detailed report on the work done for the past month for management.",
                     Date = new DateTime(2024, 5, 10).ToUniversalTime(),
                     Priority = CardPriority.High,
-                    ListId = 2
+                    BoardId = 1,
+                    CardListId = 2
                 },
                 new Card
                 {
-                    Id = 4,
+                    CardId = 4,
                     Name = "Organize corporate event",
                     Description = "Plan and organize a corporate event for company employees.",
                     Date = new DateTime(2024, 5, 10).ToUniversalTime(),
                     Priority = CardPriority.Low,
-                    ListId = 2
+                    BoardId = 1,
+                    CardListId = 2
                 },
                 new Card
                 {
-                    Id = 5,
+                    CardId = 5,
                     Name = "Prepare proposal for potential client",
                     Description = "Develop a proposal for collaboration to present to a potential client.",
                     Date = new DateTime(2024, 5, 10).ToUniversalTime(),
                     Priority = CardPriority.Medium,
-                    ListId = 1
+                    BoardId = 1,
+                    CardListId = 1
                 });
         }
 
         public void Configure(EntityTypeBuilder<CardList> builder)
         {
             builder.HasData(
-                new CardList { Id = 1, Name = "Planned" },
-                new CardList { Id = 2, Name = "Completed" }
+                 new CardList { CardListId = 1, Name = "Home Planned", BoardId = 1 },
+                 new CardList { CardListId = 2, Name = "Home Completed", BoardId = 1 },
+
+                 new CardList { CardListId = 3, Name = "Work Planned", BoardId = 2 },
+                 new CardList { CardListId = 4, Name = "Work Completed", BoardId = 2 }
+                );
+        }
+
+        public void Configure(EntityTypeBuilder<Board> builder)
+        {
+            builder.HasData(
+                new Board { BoardId = 1, Name = "Home Board" },
+                new Board { BoardId = 2, Name = "Work Board" }
                 );
         }
     }

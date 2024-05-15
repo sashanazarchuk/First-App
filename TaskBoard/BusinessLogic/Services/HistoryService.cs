@@ -24,27 +24,21 @@ namespace BusinessLogic.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<HistoryDto>> GetAllHistory()
+        public async Task<IEnumerable<HistoryDto>> GetHistories(int boardId)
         {
-            try
+            var histories = await _context.Histories
+           .Where(a => a.BoardId == boardId)
+           .OrderByDescending(a => a.Date)
+           .Take(20)
+           .ToListAsync();
+
+            return histories.Select(a => new HistoryDto
             {
-                var history = await _context.Histories
-                    .OrderByDescending(h => h.Date)
-                    .ToListAsync();
-
-                var historyDtos = _mapper.Map<IEnumerable<HistoryDto>>(history);
-
-                foreach (var historyDto in historyDtos)
-                {
-                    historyDto.DateFormat = historyDto.Date.ToString("ddd, d MMMM");
-                }
-                return historyDtos;
-            }
-            catch (Exception ex)
-            {
-                throw new($"Error fetching all history: {ex.Message}");
-
-            }
+                Id = a.HistoryId,
+                Action = a.Action,
+                BoardId = a.BoardId,
+                Date = a.Date
+            }).ToList();
         }
 
         public async Task LogHistory(HistoryDto historyDto)
@@ -54,6 +48,7 @@ namespace BusinessLogic.Services
                 var history = new History
                 {
                     Action = historyDto.Action,
+                    BoardId = historyDto.BoardId,
                     Date = DateTime.UtcNow
                 };
 

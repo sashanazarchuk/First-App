@@ -30,7 +30,7 @@ namespace BusinessLogic.Services
 
             return activities.Select(a => new ActivityDto
             {
-                Id = a.Id,
+                Id = a.ActivityId,
                 Action = a.Action,
                 CardId = a.CardId,
                 Date = a.Date,

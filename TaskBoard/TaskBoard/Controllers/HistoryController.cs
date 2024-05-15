@@ -16,12 +16,12 @@ namespace TaskBoard.Controllers
             _historyService = historyService;
         }
 
-        [HttpGet("History")]
-        public async Task<ActionResult<IEnumerable<HistoryDto>>> GetHistory()
+        [HttpGet("History/{id}")]
+        public async Task<ActionResult<IEnumerable<HistoryDto>>> GetHistory(int boardId)
         {
             try
             {
-                var history = await _historyService.GetAllHistory();
+                var history = await _historyService.GetHistories(boardId);
                 return Ok(history);
             }
             catch (Exception ex)
